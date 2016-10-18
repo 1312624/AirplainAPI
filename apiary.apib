@@ -1,0 +1,368 @@
+FORMAT: 1A
+HOST: http://api.airplain/
+
+# Airplain
+
+API bán vé máy bay.
+
+## Flights Collection [/flights]
+
+### Tra ve toan bo san bay di [GET /flights/san-bay-di]
++ Response 200 (application/json)
+
+        [
+            {
+                "id"   : "TSN",
+                "name" : "Tân Sơn Nhất"
+            },
+            {
+                "id"   : "TNN",
+                "name" : "Tân Sơn Nhì"
+            },
+            {
+                "id"   : "TNB",
+                "name" : "Nội Bài"
+            }
+        ]
+        
+### Tra ve toan bo san ban den tuong ung voi san bay di [GET /flights{?sanbaydi}]
++ Parameters
+
+    + sanbaydi (String) - cho biet san ban di nao
+    
++ Response 200 (application/json)
+
+        [
+            {
+                "id" : "SGP",
+                "name" : "Sân bay Singapore"
+            },
+            {
+                "id" : "STL",
+                "name" : "Sân bay Thailand"
+            }
+        ]
+        
+### Tra ve toan bo san bay den [GET /flights/san-bay-den]
++ Response 200 (application/json)
+
+        [
+            {
+                "id"   : "SGP",
+                "name" : "Sân bay Singapore"
+            },
+            {
+                "id"   : "STL",
+                "name" : "Sân bay Thailand"
+            },
+            {
+                "id"   : "SML",
+                "name" : "Sân bay Malaysia"
+            }
+        ]
+        
+### Tra ve toan bo san bay di tuong ung voi san bay den [GET /flights{?sanbayden}]
++ Parameters
+
+    + sanbayden (String) - Ma san bay den
+    
++ Response 200 (application/json)
+
+        [
+            {
+                "id"   : "TSN",
+                "name" : "Tân Sơn Nhất"
+            },
+            {
+                "id"   : "TNB",
+                "name" : "Nội Bài"
+            }
+        ]
+
+### Tra ve toan bo chuyen bay thoa man yeu cau [GET /flights{?sanbaydi,sanbayden,ngaydi,socho}]
++ Parameters
+
+    + sanbaydi  : SGN (required, string) - Ma san bay di
+    + sanbayden : TBB (required, string) - Ma san bay den
+    + ngaydi    : 2016-10-05 (required, string) - Ngay di
+    + socho     : 2 (required,number) - So cho can
+    
++ Response 200 (application/json)
+
+    + Body
+    
+            {   
+                "FLIGHT" :
+                [
+                    {
+                        "MA" : "BL326",
+                        "NOIDI" : "SGN",
+                        "NOIDEN" : "TBB",
+                        "NGAY" : "2016-10-05",
+                        "GIO" : "08:45",
+                        "HANG" : "Y",
+                        "MUCGIA" : "E",
+                        "SOLUONGGHE" : 100,
+                        "GIABAN" : 100000,
+                    },
+                    {
+                        "MA" : "BL326",
+                        "NOIDI" : "SGN",
+                        "NOIDEN" : "TBB",
+                        "NGAY" : "2016-10-05",
+                        "GIO" : "08:45",
+                        "HANG" : "Y",
+                        "MUCGIA" : "F",
+                        "SOLUONGGHE" : 20,
+                        "GIABAN" : 10000,
+                    },
+                    {
+                        "MA" : "BL326",
+                        "NOIDI" : "SGN",
+                        "NOIDEN" : "TBB",
+                        "NGAY" : "2016-10-05",
+                        "GIO" : "08:45",
+                        "HANG" : "Y",
+                        "MUCGIA" : "G",
+                        "SOLUONGGHE" : 10,
+                        "GIABAN" : 500000,
+                    }
+                ]
+            }
+        
+## Passengers [/passengers]
+    
+### Tra ve danh sach hanh khach tuong ung voi ma dat cho [GET /passengers/{booking_id}]
++ Parameters
+
+    + booking_id (String) - ID of the booking ticket
+    
++ Response 200 (application/json)
+
+        {
+            "passengers": [
+                {
+                    "DANHXUNG": "MR",
+                    "HO": "Hoàng",
+                    "TEN": "Minh Trí"
+                },
+                {
+                    "DANHXUNG": "MS",
+                    "HO": "Võ Hoàng",
+                    "TEN": "Phi Yến"
+                }
+            ]    
+        }
+        
+### Tra ve danh sach tat ca hanh khach [GET]
++ Response 200 (application/json)
+
+        {
+            "passengers": [
+                {
+                    "MADATCHO" : "ABCXYZ",
+                    "DANHXUNG": "MR",
+                    "HO": "Hoàng",
+                    "TEN": "Minh Trí"
+                },
+                {
+                    "MADATCHO" : "ABCXYZ",
+                    "DANHXUNG": "MS",
+                    "HO": "Võ Hoàng",
+                    "TEN": "Phi Yến"
+                },
+                {
+                    "MADATCHO" : "ABC123",
+                    "DANHXUNG": "MR",
+                    "HO": "Hoàng",
+                    "TEN": "Nhật Huy"
+                }
+            ]    
+        }
+        
+### Them hanh khach [POST]
++ Request (application/json)
+
+        {
+            "MADATCHO": "ABC123",
+            "HANHKHACH": [
+                {
+                    "DANHXUNG": "MR",
+                    "HO": "Hoàng",
+                    "TEN": "Nhật Huy"
+                },
+                {
+                    "DANHXUNG": "MS",
+                    "HO": "Hoàng",
+                    "TEN": "Đan Chi"
+                }
+            ]
+        }
+
++ Response 201 (application/json)
+
+        {
+            "status" : "Success",
+            "result" : true
+        }
+        
+## Flight Details [/flight-details]
+
+
+### Tao chang bay moi [POST]
++ Request (application/json)
+
+        {
+            "MADATCHO": "ABC123",
+            "CHUYENBAY": [
+                {
+                    "MACHUYENBAY": "BL326",
+                    "HANG": "Y",
+                    "MUCGIA": "E"
+                },
+                {
+                    "MACHUYENBAY": "BL327",
+                    "HANG": "Y",
+                    "MUCGIA": "E"
+                }
+            ]
+        }
+
++ Response 201 (application/json)
+
+        {
+            "status" : "Success",
+            "result" : true
+        }
+        
+### Tra ve danh sach tat ca chang bay [GET]
++ Response 200 (application/json)
+
+        [
+            {
+                "MADATCHO" : "ABCXYZ",
+                "MACHUYENBAY" : "BL326",
+                "NGAY" : "2016-10-05",
+                "HANG" : "Y",
+                "MUCGIA" : "E"
+            },
+            {
+                "MADATCHO" : "ABCXYZ",
+                "MACHUYENBAY" : "BL327",
+                "NGAY" : "2016-10-06",
+                "HANG" : "Y",
+                "MUCGIA" : "E"
+            },
+            {
+                "MADATCHO" : "ABC123",
+                "MACHUYENBAY" : "BL328",
+                "NGAY" : "2016-10-10",
+                "HANG" : "Y",
+                "MUCGIA" : "E"
+            }
+        ]
+
+### Tra ve chang bay theo ma dat cho [GET /flight-details/{booking_id}]
++ Parameters
+
+    + booking_id (String) - ID of the booking ticket
+    
++ Response 200 (application/json)
+
+        [
+            {
+                "MACHUYENBAY" : "BL326",
+                "NGAY" : "2016-10-05",
+                "HANG" : "Y",
+                "MUCGIA" : "E"
+            },
+            {
+                "MACHUYENBAY" : "BL327",
+                "NGAY" : "2016-10-06",
+                "HANG" : "Y",
+                "MUCGIA" : "E"
+            }
+        ]
+        
+## Booking [/booking]
+
+### Tao dat cho moi [POST]
++ Request (application/json)
+
+        {
+            "MADATCHO": "ABC123",
+            "HANHKHACH": [
+                {
+                    "DANHXUNG": "MR",
+                    "HO": "Hoàng",
+                    "TEN": "Nhật Huy"
+                },
+                {
+                    "DANHXUNG": "MS",
+                    "HO": "Hoàng",
+                    "TEN": "Đan Chi"
+                }
+            ]
+        }
+
++ Response 201 (application/json)
+
+        {
+            "status" : "Success",
+            "result" : true
+        }
+        
+### cap nhat dat cho [PUT]
++ Request (application/json)
+
+        {
+            "MADATCHO": "ABC123",
+        }
+
++ Response 201 (application/json)
+
+        {
+            "status" : "Success",
+            "result" : true
+        }
+        
+### Thong Tin Ma Dat Cho [GET /booking/{booking_id}]
++ Parameters
+
+    + booking_id (String) - ID of the booking ticket
+    
++ Response 200 (application/json)
+
+        {   
+            "THOIGIANDATCHO" : "2016-05-01 10:00:00",
+            "TONGTIEN" : 400000,
+            "TRANGTHAI" : 1,
+            "FLIGHT-DETAIS" :
+            [
+                {
+                    "MACHUYENBAY" : "BL326",
+                    "NGAY" : "2016-10-05",
+                    "HANG" : "Y",
+                    "MUCGIA" : "E"
+                },
+                {
+                    "MACHUYENBAY" : "BL327",
+                    "NGAY" : "2016-10-06",
+                    "HANG" : "Y",
+                    "MUCGIA" : "E"
+                }
+            ],
+            "HANHKHACH" : 
+            [
+                {
+                    "DANHXUNG": "MR",
+                    "HO": "Hoàng",
+                    "TEN": "Minh Trí"
+                },
+                {
+                    "DANHXUNG": "MS",
+                    "HO": "Võ Hoàng",
+                    "TEN": "Phi Yến"
+                }
+            ]
+        }
